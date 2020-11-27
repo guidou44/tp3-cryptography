@@ -2,7 +2,7 @@ package ex2.common;
 
 import ex2.domain.exceptions.InvalidChoiceException;
 
-public enum ProtocolType implements ConsoleInteraction {
+public enum ProtocolType implements ConsoleChoice {
     HTTP_DIGEST(1, "HTTP-Digest"),
     WEB_AUTH(2, "WebAuth"),
     NONE(3, "Quitter");

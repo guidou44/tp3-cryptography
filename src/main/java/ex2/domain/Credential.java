@@ -1,5 +1,8 @@
 package ex2.domain;
 
+/*
+* Classe qui encapsule des informations de credential pour WebAuthn: user, privateKey, domaine
+* */
 public class Credential {
     private String user;
     private String privateKey;

@@ -32,15 +32,26 @@ public class AesCtr128Cipher {
             InvalidAlgorithmParameterException, InvalidKeyException,
             BadPaddingException, IllegalBlockSizeException {
 
-        SecretKey secretKey = generateSecretKeyFromPassword(externalPassword);//génère une clef à partir du password
-        IvParameterSpec userIv = generateInitialisationVector(); //génère un IV aléatoire pour le champ 'user'
-        IvParameterSpec passwordIv = generateInitialisationVector();//génère un IV aléatoire pour le champ 'privateKey'
-
-        String userEncrypted = encryptSingleField(credentialToEncrypt.getUser(), secretKey, userIv); //champ 'user' encrypté
-        String passwordEncrypted = encryptSingleField(credentialToEncrypt.getPrivateKey(), secretKey, passwordIv);//champ 'password' encrypté
+        String userEncrypted = encrypt(credentialToEncrypt.getUser(), externalPassword); //champ 'user' encrypté
+        String passwordEncrypted = encrypt(credentialToEncrypt.getPrivateKey(), externalPassword);//champ 'password' encrypté
 
         credentialToEncrypt.setUser(userEncrypted);//on set le champ 'user' encrypté. Le iv est concaténé avec le cipher text pour assurer le déchiffrement.
         credentialToEncrypt.setPrivateKey(passwordEncrypted);//on set le champ 'password' encrypté. Le iv est concaténé avec le cipher text pour assurer le déchiffrement.
+    }
+
+    /**
+     * Fonction pour encrypter un String avec le password passé en paramètre.
+     *
+     * */
+    public String encrypt(String stringToEncrypt, String externalPassword)
+            throws IOException, NoSuchAlgorithmException, NoSuchPaddingException,
+            InvalidAlgorithmParameterException, InvalidKeyException,
+            BadPaddingException, IllegalBlockSizeException {
+
+        SecretKey secretKey = generateSecretKeyFromPassword(externalPassword);//génère une clef à partir du password
+        IvParameterSpec iv = generateInitialisationVector(); //génère un IV
+
+        return encryptSingleField(stringToEncrypt, secretKey, iv);
     }
 
     /**

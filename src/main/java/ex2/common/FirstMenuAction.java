@@ -2,7 +2,7 @@ package ex2.common;
 
 import ex2.domain.exceptions.InvalidChoiceException;
 
-public enum FirstMenuAction implements ConsoleInteraction {
+public enum FirstMenuAction implements ConsoleChoice {
 
     REGISTER(1, "Enregistrer un nouveau compte"),
     AUTHENTICATE(2, "Authentification"),

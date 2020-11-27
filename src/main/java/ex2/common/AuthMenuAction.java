@@ -2,7 +2,7 @@ package ex2.common;
 
 import ex2.domain.exceptions.InvalidChoiceException;
 
-public enum AuthMenuAction implements ConsoleInteraction {
+public enum AuthMenuAction implements ConsoleChoice {
 
     OPERATION(1, "Faire une opération"),
     KEY_STORE(2, "Visualiser la trousse de clés"),
