@@ -12,7 +12,7 @@ public class HttpDigest extends Protocol {
 
     private static final String FILE_ENTRY_SEPARATOR = " ";
     private static final String HASH_SEPARATOR = ":";
-    private static final String UserDbFileName = "HttpDigestUser.txt";
+    private static final String UserDbFileName = "HttpDigest/HttpDigestUser.txt";
 
     private int _serverNonce = 0;
     private int _sessionId = 0;

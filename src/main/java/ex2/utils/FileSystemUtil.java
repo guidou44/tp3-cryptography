@@ -37,6 +37,8 @@ public class FileSystemUtil {
 
     private static void initializeFile(Path filePath) throws IOException {
         File file = filePath.toFile();
+        File directory = new File(file.getParentFile().getAbsolutePath());
+        directory.mkdirs();
         file.createNewFile();
     }
 
