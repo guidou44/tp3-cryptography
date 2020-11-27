@@ -15,21 +15,38 @@ public abstract class Protocol {
     protected static final String GET = "GET";
     protected static final String CLIENT = "C";
     protected static final String SERVER = "S";
+    protected static final String FILE_ENTRY_SEPARATOR = " ";
+    protected static final String HASH_SEPARATOR = ":";
+
+    public abstract void register() throws Exception;
+    public abstract void authenticate() throws Exception;
+
+    private final Scanner scanner = new Scanner(System.in);
 
     protected Map<String, String> getUserPasswordInput() {
-        Scanner s = new Scanner(System.in);
 
-        System.out.println("Enter user: ");
-        String user = s.nextLine();
-        System.out.println("Enter password: ");
-        String password = s.nextLine();
-
-        if (user.contains(" ") || user.length() > 20 || password.contains(" ")) {
-            user = "";
-            password = "";
-        }
+        String user = getUserInput();
+        String password = getPasswordInput();
 
         return Collections.singletonMap(user, password);
+    }
+
+    protected String getUserInput() {
+        System.out.println("Enter user: ");
+        String user = scanner.nextLine();
+        if (user.contains(" ") || user.length() > 20) {
+            user = "";
+        }
+        return user;
+    }
+
+    protected String getPasswordInput() {
+        System.out.println("Enter password: ");
+        String password = scanner.nextLine();
+        if (password.contains(" ")) {
+            password = "";
+        }
+        return password;
     }
 
     protected String getManInTheMiddleEntry(String originalMessage, String from, String to) {
@@ -39,16 +56,10 @@ public abstract class Protocol {
         return s.nextLine();
     }
 
-    protected String getUserFromMessage(String message) {
-        return message.split(" ")[0]; //si l'intru change le message lors de l'enregistrement, on assume qu'il va mettre: user password.
+    protected String getInformationFromMessage(String message, int atIndex) {
+        String[] messageParts = message.split(" ");
+        return messageParts.length < atIndex + 1 ? null : messageParts[atIndex];
     }
-
-    protected String getPasswordHashFromManInTheMiddleGetMessage(String message) {
-        String[] messageParts = message.split(" "); //si l'intru change le message lors de l'enregistrement, on assume qu'il va mettre: user password.
-        return messageParts.length <= 1 ? null : messageParts[1];
-    }
-
-    protected abstract String getPasswordHashFromAuthMessage(String message);
 
     protected int random5DigitsNumber() {
         return new Random().nextInt(99999) + 1; //on ne veut pas de 0

@@ -5,6 +5,7 @@ import ex2.common.ConsoleInteraction;
 import ex2.common.FirstMenuAction;
 import ex2.common.ProtocolType;
 import ex2.protocols.HttpDigest;
+import ex2.protocols.WebAuthn;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -56,6 +57,23 @@ public class Program {
                         System.out.println("Bye!");
                     }
                 } else if (_protocol == ProtocolType.WEB_AUTH) {
+                    WebAuthn webAuthn = new WebAuthn();
+
+                    int firstActionNumber = getChoiceFromUser(firstMenu);
+                    FirstMenuAction action = FirstMenuAction.from(firstActionNumber == NoChoice ? FirstMenuAction.QUIT.getEntryNUmber() : firstActionNumber);
+                    if (action == FirstMenuAction.REGISTER) {
+                        webAuthn.register();
+                        Continue = true;
+                    } else if (action == FirstMenuAction.AUTHENTICATE) {
+                        webAuthn.authenticate();
+                        Continue = true;
+                    } else if (action == FirstMenuAction.BACK) {
+                        Continue = true;
+                        MenuNumber = 0;
+                    } else {
+                        Continue = false;
+                        System.out.println("Bye!");
+                    }
 
                 } else {
                     Continue = false;

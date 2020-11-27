@@ -10,15 +10,14 @@ import java.util.Map;
 
 public class HttpDigest extends Protocol {
 
-    private static final String FILE_ENTRY_SEPARATOR = " ";
-    private static final String HASH_SEPARATOR = ":";
     private static final String UserDbFileName = "HttpDigest/HttpDigestUser.txt";
 
     private int _serverNonce = 0;
     private int _sessionId = 0;
-    private int _clientNonce;
+    private int _clientNonce = 0;
 
-    public void register() throws NoSuchAlgorithmException, IOException {
+    @Override
+    public void register() throws Exception {
         Map.Entry<String, String> userPassword = getUserPasswordInput().entrySet().iterator().next();
         if (userPassword.getKey().isEmpty() || userPassword.getValue().isEmpty()) {
             System.out.println("Invalid user or password.");
@@ -28,14 +27,14 @@ public class HttpDigest extends Protocol {
         String user = userPassword.getKey();
         String password = userPassword.getValue();
 
-        String hash = HashManager.hash(user + HASH_SEPARATOR + password);
+        String hash = HashManager.hashMD5(user + HASH_SEPARATOR + password);
         String lineEntry = user + FILE_ENTRY_SEPARATOR + hash;
         String mitmMessage = getManInTheMiddleEntry(lineEntry, CLIENT, SERVER);
 
         if (!mitmMessage.isEmpty()) {
             lineEntry = mitmMessage;
-            user = getUserFromMessage(mitmMessage);
-            hash = getPasswordHashFromManInTheMiddleGetMessage(mitmMessage);
+            user = getInformationFromMessage(mitmMessage, 0);
+            hash = getInformationFromMessage(mitmMessage, 1);
         }
         System.out.printf("E1. C → S : %s%n", lineEntry);
 
@@ -54,10 +53,16 @@ public class HttpDigest extends Protocol {
         System.out.printf("E2. S → C : %s%n", mitmMessage.isEmpty() ? answer : mitmMessage);
     }
 
-    public void authenticate() throws IOException, NoSuchAlgorithmException {
+    @Override
+    public void authenticate() throws Exception {
         resetSession();
         getRequest();
         authenticateInternal();
+    }
+
+    protected String getPasswordHashFromAuthMessage(String message) {
+        String[] messageParts = message.split(" ");
+        return messageParts.length <= 3 ? null : messageParts[3];
     }
 
     private void getRequest() {
@@ -99,7 +104,7 @@ public class HttpDigest extends Protocol {
         String password = userPassword.getValue();
 
 
-        String innerHash = HashManager.hash(user + HASH_SEPARATOR + password);
+        String innerHash = HashManager.hashMD5(user + HASH_SEPARATOR + password);
         _clientNonce = random5DigitsNumber();
         String authHashClient = generateAuthHash(user, innerHash);
         String authMessage = String.format("%s %d %d %s %d", user, _serverNonce, _clientNonce, authHashClient, _sessionId);
@@ -108,7 +113,7 @@ public class HttpDigest extends Protocol {
         System.out.printf("A3. C → S : %s%n", authMessage);
 
         String answer;
-        String userReceived = getUserFromMessage(authMessage);
+        String userReceived = getInformationFromMessage(authMessage, 0);
         String passwordHashReceived = getPasswordHashFromAuthMessage(authMessage);
 
         String alreadyExisting = FileSystemUtil.readLineEntry(userReceived, UserDbFileName);
@@ -126,19 +131,13 @@ public class HttpDigest extends Protocol {
     }
 
     private String generateAuthHash(String user, String passwordHash) throws NoSuchAlgorithmException {
-        String requestHash = HashManager.hash(GET + HASH_SEPARATOR + DOMAIN);
-        return HashManager.hash(passwordHash + HASH_SEPARATOR + _serverNonce + HASH_SEPARATOR + _clientNonce + HASH_SEPARATOR + requestHash);
+        String requestHash = HashManager.hashMD5(GET + HASH_SEPARATOR + DOMAIN);
+        return HashManager.hashMD5(passwordHash + HASH_SEPARATOR + _serverNonce + HASH_SEPARATOR + _clientNonce + HASH_SEPARATOR + requestHash);
     }
 
     private void resetSession() {
         _serverNonce = 0;
         _clientNonce = 0;
         _sessionId = 0;
-    }
-
-    @Override
-    protected String getPasswordHashFromAuthMessage(String message) {
-        String[] messageParts = message.split(" ");
-        return messageParts.length <= 3 ? null : messageParts[3];
     }
 }
