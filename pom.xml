@@ -31,7 +31,7 @@
           <appendAssemblyId>false</appendAssemblyId>
           <archive>
             <manifest>
-              <mainClass>Program</mainClass>
+              <mainClass>ex2.Program</mainClass>
             </manifest>
           </archive>
         </configuration>
