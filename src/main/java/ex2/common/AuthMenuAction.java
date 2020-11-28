@@ -2,6 +2,9 @@ package ex2.common;
 
 import ex2.domain.exceptions.InvalidChoiceException;
 
+/*
+* Enum qui contient tous les actions du second menu pour WebAuth, le menu après authentification
+* */
 public enum AuthMenuAction implements ConsoleChoice {
 
     OPERATION(1, "Faire une opération"),
@@ -9,8 +12,8 @@ public enum AuthMenuAction implements ConsoleChoice {
     BACK(3, "Menu précédent"),
     QUIT(4, "Quitter");
 
-    private int entryNumber;
-    private String name;
+    private final int entryNumber;
+    private final String name;
 
     AuthMenuAction(int entryNumber, String name) {
         this.entryNumber = entryNumber;
@@ -29,6 +32,9 @@ public enum AuthMenuAction implements ConsoleChoice {
         System.out.println(getEntryNUmber() + " : " + getName());
     }
 
+    /*
+    * Fonction pour obtenir la valeur de l'énum à partir du numéro choisis
+    * */
     public static AuthMenuAction from(int number) {
         for (AuthMenuAction action : AuthMenuAction.values()) {
             if (action.getEntryNUmber() == number) {

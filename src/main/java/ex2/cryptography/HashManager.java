@@ -5,15 +5,24 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+/*
+* Classe qui encapsule les opérations de hash.
+* */
 public class HashManager {
 
     private static final String SHA256 = "SHA-256";
     private static final String MD5 = "SHA-256";
 
+    /*
+    * Fonction pour H1 --> MD5
+    * */
     public static String hashMD5(String beforeHash) throws NoSuchAlgorithmException {
         return hash(beforeHash, MD5);
     }
 
+    /*
+     * Fonction pour H2 --> 256
+     * */
     public static String hashSHA256(String beforeHash) throws NoSuchAlgorithmException {
         return hash(beforeHash, SHA256);
     }

@@ -2,6 +2,10 @@ package ex2.common;
 
 import ex2.domain.exceptions.InvalidChoiceException;
 
+
+/*
+* Enum qui contient les choix du second menu après avoir choisis le protocole (premier menu d'action)
+* */
 public enum FirstMenuAction implements ConsoleChoice {
 
     REGISTER(1, "Enregistrer un nouveau compte"),
@@ -9,8 +13,8 @@ public enum FirstMenuAction implements ConsoleChoice {
     BACK(3, "Menu précédent"),
     QUIT(4, "Quitter");
 
-    private int entryNumber;
-    private String name;
+    private final int entryNumber;
+    private final String name;
 
     FirstMenuAction(int entryNumber, String name) {
         this.entryNumber = entryNumber;
@@ -29,6 +33,9 @@ public enum FirstMenuAction implements ConsoleChoice {
         System.out.println(getEntryNUmber() + " : " + getName());
     }
 
+    /*
+    * Fonction qui permet d'obtenir la valeur du choix dans l'enum à partir du numéro entré
+    * */
     public static FirstMenuAction from(int number) {
         for (FirstMenuAction action : FirstMenuAction.values()) {
             if (action.getEntryNUmber() == number) {

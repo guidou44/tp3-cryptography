@@ -16,13 +16,8 @@ public abstract class Protocol {
     protected static final String NOT_FOUND = "404";
     protected static final String DOMAIN = "/dir/index.html";
     protected static final String GET = "GET";
-    protected static final String CLIENT = "C";
-    protected static final String SERVER = "S";
-    protected static final String FILE_ENTRY_SEPARATOR = " ";
-    protected static final String HASH_SEPARATOR = ":";
-
-    public abstract void register() throws Exception; //doit être implémenté par n'importe qu'elle simulateur de protocole
-    public abstract boolean authenticate() throws Exception;//doit être implémenté par n'importe qu'elle simulateur de protocole
+    protected static final String SEPARATOR = " ";
+    private static final String STEP_SEPARATOR = "----------------------------------------------------";
 
     protected final Scanner scanner = new Scanner(System.in);//permet de lire la console
 
@@ -62,16 +57,6 @@ public abstract class Protocol {
     }
 
     /*
-     * Fonction qui permet à l'intrus ou MITM de changer des message interceptés. retourne le message modifié, ou un string vide si gardé tel quel.
-     * */
-    protected String getManInTheMiddleEntry(String originalMessage, String from, String to) {
-        Scanner s = new Scanner(System.in);
-        System.out.printf("[MITM INTERCEPTION %s → %s] : %s%n", from, to, originalMessage);
-        System.out.println("input modified message + press enter, or just press enter to keep original message:");
-        return s.nextLine();
-    }
-
-    /*
     * Fonction qui permet d'extraire de l'info d'un message reçus, à l'index désiré
     * */
     protected String getInformationFromMessage(String message, int atIndex) {
@@ -85,5 +70,12 @@ public abstract class Protocol {
     * */
     protected int random5DigitsNumber() {
         return new Random().nextInt(99999) + 1; //on ne veut pas de 0
+    }
+
+    /*
+    * Fonction pour ajouter une séparation à la console afin de faciliter la lisibilité des étapes
+    * */
+    protected void printStepSeparator() {
+        System.out.println(System.lineSeparator() + STEP_SEPARATOR + System.lineSeparator());
     }
 }
